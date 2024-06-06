@@ -13,7 +13,6 @@ DATABASE_URL = "mssql+pyodbc://sa:YourStrong!Passw0rd@localhost/PoC?trustServerC
 engine = create_engine(DATABASE_URL)
 metadata = MetaData(bind=engine)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-#session = SessionLocal()
 
 # Load Jinja2 templates
 env = Environment(
