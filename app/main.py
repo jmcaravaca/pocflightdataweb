@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import create_engine, MetaData, Table, select
 from sqlalchemy.orm import sessionmaker
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -7,19 +7,27 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 app = FastAPI()
 
 # Database configuration
-DATABASE_URL = "mssql+pyodbc://pocuser:pocuser@11LAP5CD2472NZS/SQLEXPRESS/PoC?driver=ODBC+Driver+17+for+SQL+Server"
+DATABASE_URL = "mssql+pyodbc://sa:YourStrong!Passw0rd@localhost/PoC?trustServerCertificate=yes&driver=ODBC+Driver+18+for+SQL+Server"
 
 # SQLAlchemy setup
 engine = create_engine(DATABASE_URL)
-schema = "dbo"
 metadata = MetaData(bind=engine)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+#session = SessionLocal()
 
 # Load Jinja2 templates
 env = Environment(
     loader=FileSystemLoader("app/templates"),
     autoescape=select_autoescape(['html', 'xml'])
 )
+
+
+@app.get("/", response_class=HTMLResponse)
+async def redirecthome(request: Request):
+    return RedirectResponse("/index")
+
+
+
 
 @app.get("/index", response_class=HTMLResponse)
 async def read_data(request: Request):
@@ -42,3 +50,7 @@ async def read_data(request: Request):
     template = env.get_template("index.html")
     return template.render(request=request, data=data)
 
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=5555)
