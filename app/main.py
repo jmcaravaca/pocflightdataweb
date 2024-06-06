@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy import create_engine, MetaData, Table, select
 from sqlalchemy.orm import sessionmaker
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -24,31 +24,46 @@ env = Environment(
 
 @app.get("/", response_class=HTMLResponse)
 async def redirecthome(request: Request):
-    return RedirectResponse("/index")
+    return RedirectResponse("/dynamic")
 
 
 
 
 @app.get("/index", response_class=HTMLResponse)
 async def read_data(request: Request):
+    # Render the template with the data
+    data = await get_data()
+    template = env.get_template("index.html")
+    return template.render(request=request, data=data)
+
+@app.get("/dynamic", response_class=HTMLResponse)
+async def dynamic_site(request: Request):
+    # Render the template with the data
+    template = env.get_template("dynamic.html")
+    return template.render(request=request)
+
+
+@app.get("/flightdata", response_class=JSONResponse)
+async def get_flight_data(request: Request):
+    data = await get_data()
+    return data
+
+
+async def get_data():
     session = SessionLocal()
     try:
         # Reflect the table
         poc_flight_data_processed = Table("PoCFlightDataProcessed", metadata, autoload_with=engine)
-        
         # Query the table
         stmt = select(poc_flight_data_processed)
         results = session.execute(stmt).fetchall()
-        
         # Convert results to a list of dicts
         data = [dict(row) for row in results]
-        
     finally:
         session.close()
+    # Return data
+    return data
 
-    # Render the template with the data
-    template = env.get_template("index.html")
-    return template.render(request=request, data=data)
 
 
 if __name__ == "__main__":
