@@ -1,5 +1,5 @@
 fastapi
 uvicorn
 jinja2
-sqlalchemy==1.4.52
+sqlalchemy
 pyodbc
