@@ -7,6 +7,7 @@ class FlightDataRow(BaseModel):
     DELAYEDFLIGHTS : int
     AVERAGEDELAY : float
     NAME: str
+    NAMESHORT : str
     NAMEURL : str
     COUNTRY : str
     TIMESTAMP : datetime

@@ -16,11 +16,12 @@ class FlightDataModel(Base):
     DELAYEDFLIGHTS = mapped_column(Integer)
     AVERAGEDELAY= mapped_column(Float)
     NAME = mapped_column(String)
+    NAMESHORT = mapped_column(String)
     NAMEURL = mapped_column(String)
     COUNTRY = mapped_column(String)
     TIMESTAMP = mapped_column(DateTime)
     
-    
+
 
 # Database configuration
 DATABASE_URL = "sqlite:///data.db"

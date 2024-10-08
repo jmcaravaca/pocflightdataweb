@@ -7,7 +7,7 @@ router = APIRouter()
 
 # Load Jinja2 templates
 env = Environment(
-    loader=FileSystemLoader("app/templates"),
+    loader=FileSystemLoader("templates"),
     autoescape=select_autoescape(['html', 'xml'])
 )
 

@@ -17,8 +17,6 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy the local code to the container
 COPY . .
 
-RUN bash installodbc.sh
-
 # Expose the port that FastAPI is running on
 EXPOSE 5555
 
